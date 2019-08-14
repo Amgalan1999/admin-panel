@@ -2,66 +2,64 @@
   <v-app dark>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
       fixed
+      temporary
       app
+      small
     >
-      <v-list>
-        <v-list-group 
+      <v-list nav dense>
+        <v-list-group
           v-for="(item, i) in items"
           :key="i"
+          :prepend-icon="item.icon"
           sub-group
           no-action
         >
-          <v-template v-slot:activator>
-            <v-list-tile>
-              <v-list-tile-action>
-                <v-icon>{{item.icon}}</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-title>
-                <v-list-tile-title v-text="item.title" />
-              </v-list-tile-title>
-            </v-list-tile>
-          </v-template>
-          <v-list-tile v-for="(el, ind) in item.sub" :key="ind">
-            <v-list-tile-title>
-              {{el.title}}
-            </v-list-tile-title>
-            <v-list-tile-action>
-              <v-icon>{{el.icon}}</v-icon>
-            </v-list-tile-action>
-          </v-list-tile>
-          
+          <template v-slot:activator>
+            <v-list-item-title>
+              {{item.title}}
+            </v-list-item-title>
+          </template>
+          <v-list-group
+            v-for="(el, ind) in item.sub"
+            :key="ind"
+            sub-group
+            no-action
+          >
+            <template v-slot:activator>
+              <v-list-item-title>
+                {{el.title}}
+              </v-list-item-title>
+            </template>
+            <v-list-item
+              v-for="(sm, index) in el.sub"
+              :key="index"
+              @click="$router.push(sm.to)"
+              >
+              <v-list-item-title>
+                {{sm.title}}
+              </v-list-item-title>
+              <v-list-item-action>
+                <fa :icon="['fas', sm.icon]" style="height: 16px; color: inherit;"/>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list-group>
+
         </v-list-group>
       </v-list>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block>Logout</v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
     <v-app-bar
-      :clipped-left="clipped"
       fixed
       app
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
-      <v-spacer />
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
+      <v-toolbar-title>Octavues</v-toolbar-title>
+      <v-spacer/>
       <v-btn
         icon
         @click.stop="rightDrawer = !rightDrawer"
@@ -74,7 +72,7 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-navigation-drawer
+    <!-- <v-navigation-drawer
       v-model="rightDrawer"
       :right="right"
       temporary
@@ -90,7 +88,7 @@
           <v-list-item-title>Switch drawer (click me)</v-list-item-title>
         </v-list-item>
       </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
     <v-footer
       :fixed="fixed"
       app
@@ -104,25 +102,81 @@
 export default {
   data () {
     return {
-      clipped: false,
       drawer: false,
       fixed: false,
-      items: [{
-        title: "Hello",
-        icon: "mdi-apps",
-        sub: [{
-            icon: 'mdi-apps',
-            title: 'Welcome',
-            to: '/'
-          },
-          {
-            icon: 'mdi-chart-bubble',
-            title: 'Inspire',
-            to: '/inspire'
-          }]
+      items: [
+        {
+          title: "Мэдрэмж",
+          icon: "mdi-apps",
+          sub: [
+            {
+              title: "Quotes",
+              sub: [
+                {
+                  icon: 'plus',
+                  title: 'Add Quote',
+                  to: '/medremj/quotes/add_quote'
+                },{
+                  icon: 'quote-left',
+                  title: 'Quotes',
+                  to: '/medremj/quotes'
+                },{
+                  icon: 'hashtag',
+                  title: 'Hashtags',
+                  to: '/medremj/quotes/hashtag'
+                }
+              ]
+            },{
+              title: "Musics",
+              sub: [
+                {
+                  icon: 'plus',
+                  title: 'Add Music',
+                  to: '/medremj/musics/add_music'
+                },
+                {
+                  icon: 'music',
+                  title: 'Musics',
+                  to: '/medremj/musics'
+                },{
+                  icon: 'hashtag',
+                  title: 'Hashtags',
+                  to: '/medremj/musics/hashtag'
+                }
+              ]
+            },{
+              title: "Requests",
+              sub: [
+                {
+                  icon: "handshake",
+                  title: "Collaboration",
+                  to: "/medremj/requests/collaboration"
+                },{
+                  icon: "paper-plane",
+                  title: "Music Request",
+                  to: "/medremj/requests/music"
+                },{
+                  icon: "flag",
+                  title: "Report Music",
+                  to: "/medremj/requests/reportmusic"
+                },{
+                  icon: "flag",
+                  title: "Report Quote",
+                  to: "/medremj/requests/reportquote"
+                },{
+                  icon: "flag",
+                  title: "Report music channel",
+                  to: "/medremj/requests/reportchannel"
+                },{
+                  icon: "flag",
+                  title: "Report Hashtag",
+                  to: "/medremj/requests/reporthashtag"
+                },
+              ]
+            },
+          ]
         }
       ],
-      miniVariant: false,
       right: true,
       rightDrawer: false,
       title: 'Vuetify.js'
