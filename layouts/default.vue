@@ -8,20 +8,32 @@
       app
     >
       <v-list>
-        <v-list-item
+        <v-list-group 
           v-for="(item, i) in items"
           :key="i"
-          :to="item.to"
-          router
-          exact
+          sub-group
+          no-action
         >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
+          <v-template v-slot:activator>
+            <v-list-tile>
+              <v-list-tile-action>
+                <v-icon>{{item.icon}}</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-title>
+                <v-list-tile-title v-text="item.title" />
+              </v-list-tile-title>
+            </v-list-tile>
+          </v-template>
+          <v-list-tile v-for="(el, ind) in item.sub" :key="ind">
+            <v-list-tile-title>
+              {{el.title}}
+            </v-list-tile-title>
+            <v-list-tile-action>
+              <v-icon>{{el.icon}}</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+          
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
@@ -95,16 +107,19 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
+      items: [{
+        title: "Hello",
+        icon: "mdi-apps",
+        sub: [{
+            icon: 'mdi-apps',
+            title: 'Welcome',
+            to: '/'
+          },
+          {
+            icon: 'mdi-chart-bubble',
+            title: 'Inspire',
+            to: '/inspire'
+          }]
         }
       ],
       miniVariant: false,
